@@ -20,14 +20,11 @@ spec:
     spec:
       containers:
       - name: mongo
-        image: mongo:4.2.12
-        command:
-        - /bin/bash
-        - -c
+        image: mongo:4.2.12        
         env:
         - name: MONGO_INITDB_ROOT_USERNAME
           value: "vaxidrez"
         - name: MONGO_INITDB_ROOT_PASSWORD
-          value: "$VaxiDrez2025"
+          value: "$$VaxiDrez2025"
         ports:
         - containerPort: 27017
