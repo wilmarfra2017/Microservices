@@ -21,7 +21,7 @@ namespace Servicios.api.Seguridad.Core.JwtLogic
                 new Claim("apellido", usuario.Apellido),
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("C7q3FBCJZq0bIRRH0Dq4lxWuBipEBkHX"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ12"));
             var credential = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
             var tokenDescription = new SecurityTokenDescriptor

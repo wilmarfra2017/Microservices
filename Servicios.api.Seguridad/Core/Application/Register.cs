@@ -55,8 +55,9 @@ namespace Servicios.api.Seguridad.Core.Application
             }
 
             public async Task<UsuarioDto> Handle(UsuarioRegisterCommand request, CancellationToken cancellationToken)
-            {
-                var existe =  await _context.Users.Where(x => x.Email == request.Email).AnyAsync();
+            {                
+                var existe = await _context.Users.FirstOrDefaultAsync(x => x.Email == request.Email) != null;
+
                 if (existe) {
                     throw new Exception("El email del usuario ya existe en la base de datos ");
                 }

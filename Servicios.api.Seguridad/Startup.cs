@@ -21,6 +21,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Servicios.api.Seguridad.Core.Application;
 using Servicios.api.Seguridad.Core.Entities;
 using Servicios.api.Seguridad.Core.JwtLogic;
@@ -88,12 +89,21 @@ namespace Servicios.api.Seguridad
                 });
             });
 
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Servicios.api.Seguridad", Version = "v1" });
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-          
+            // Configuración de Swagger
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Servicios.api.Seguridad v1"));
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
