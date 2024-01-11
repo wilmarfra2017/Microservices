@@ -13,4 +13,4 @@ spec:
     - containerPort: 80
     env:
         - name: ConnectionStrings__ConexionDB
-          value: "Server=mssql-service;Initial Catalog=Seguridad;User Id=sa;Password=$VaxiDrez2025;TrustServerCertificate=True;"  
+          value: "Server=mssql-service;Initial Catalog=Seguridad;User Id=sa;Password=VaxiDrez2025!;TrustServerCertificate=True;"  
