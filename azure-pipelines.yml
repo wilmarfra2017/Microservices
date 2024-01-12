@@ -5,44 +5,38 @@ resources:
 - repo: self
 
 variables:
-  # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: 'cec8a3de-ca8b-4fac-9850-51ef30d700c9'
-  imageRepository: 'wilmarframicroservices'
-  containerRegistry: 'msvcsacr001.azurecr.io'
-  dockerfilePath: '$(Build.SourcesDirectory)/Servicios.api.Gateway/Dockerfile'
-  tag: '$(Build.BuildId)'
-
   # Docker Hub service connection name
   dockerHubServiceConnection: 'DockerHubConnection' # This is the service connection for Docker Hub
-  dockerHubRepository: 'yourDockerHubUsername/wilmarframicroservices' # Replace with your Docker Hub username and repository
+  imageRepository: 'yourDockerHubUsername/wilmarframicroservices' # Replace with your Docker Hub username and repository
+  dockerfilePath: '$(Build.SourcesDirectory)/Servicios.api.Gateway/Dockerfile'
+  tag: '$(Build.BuildId)'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
 
 stages:
 - stage: Build
-  displayName: Build and push stage
+  displayName: 'Build and push image to Docker Hub'
   jobs:
   - job: Build
-    displayName: Build
+    displayName: 'Build image'
     pool:
       vmImage: $(vmImageName)
     steps:
     - task: Docker@2
-      displayName: Build and push an image to Azure Container Registry
+      displayName: 'Build an image'
       inputs:
-        command: buildAndPush
+        command: build
         repository: $(imageRepository)
         dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
 
     - task: Docker@2
-      displayName: Push the image to Docker Hub
+      displayName: 'Push the image to Docker Hub'
       inputs:
         command: push
-        repository: $(dockerHubRepository)
+        repository: $(imageRepository)
         containerRegistry: $(dockerHubServiceConnection)
         tags: |
           $(tag)
