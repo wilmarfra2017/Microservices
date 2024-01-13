@@ -5,40 +5,32 @@ resources:
 - repo: self
 
 variables:
-  # Docker Hub service connection name
-  dockerHubServiceConnection: 'DockerHubConnection' # This is the service connection for Docker Hub
-  imageRepository: 'yourDockerHubUsername/wilmarframicroservices' # Replace with your Docker Hub username and repository
-  dockerfilePath: 'Servicios.api.Gateway/Dockerfile'
-  buildContext: 'Servicios.api.Gateway' # The build context is set to the 'Servicios.api.Gateway' directory
+  dockerHubServiceConnection: 'DockerHubConnection'
+  imageRepository: 'mart800749/MicroservicesDevOps'
   tag: '$(Build.BuildId)'
 
-  # Agent VM image name
-  vmImageName: 'ubuntu-latest'
+pool:
+  vmImage: 'ubuntu-latest'
 
-stages:
-- stage: Build
+jobs:
+- job: Build
   displayName: 'Build and push image to Docker Hub'
-  jobs:
-  - job: Build
-    displayName: 'Build image'
-    pool:
-      vmImage: $(vmImageName)
-    steps:
-    - task: Docker@2
-      displayName: 'Build an image'
-      inputs:
-        command: build
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        context: $(Build.SourcesDirectory)/$(buildContext) # Added build context here
-        tags: |
-          $(tag)
+  steps:
+  - task: Docker@2
+    displayName: 'Build an image'
+    inputs:
+      command: build
+      dockerfile: 'Servicios.api.Gateway/Dockerfile'
+      context: 'Servicios.api.Gateway'
+      repository: $(imageRepository)
+      tags: |
+        $(tag)
 
-    - task: Docker@2
-      displayName: 'Push the image to Docker Hub'
-      inputs:
-        command: push
-        repository: $(imageRepository)
-        containerRegistry: $(dockerHubServiceConnection)
-        tags: |
-          $(tag)
+  - task: Docker@2
+    displayName: 'Push the image to Docker Hub'
+    inputs:
+      command: push
+      repository: $(imageRepository)
+      containerRegistry: $(dockerHubServiceConnection)
+      tags: |
+        $(tag)
