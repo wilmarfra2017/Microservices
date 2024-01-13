@@ -5,6 +5,7 @@ resources:
 - repo: self
 
 variables:
+  system.debug: true
   dockerHubServiceConnection: 'DockerHubConnection'
   imageRepository: 'mart800749/MicroservicesDevOps'
   tag: '$(Build.BuildId)'
