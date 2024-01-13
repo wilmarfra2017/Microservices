@@ -22,6 +22,7 @@ jobs:
       command: build
       dockerfile: 'Servicios.api.Gateway/Dockerfile'
       context: '.'
+      arguments: '--no-cache'
       repository: $(imageRepository)
       tags: |
         $(tag)
