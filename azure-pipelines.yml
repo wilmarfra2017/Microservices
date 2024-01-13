@@ -8,7 +8,8 @@ variables:
   # Docker Hub service connection name
   dockerHubServiceConnection: 'DockerHubConnection' # This is the service connection for Docker Hub
   imageRepository: 'yourDockerHubUsername/wilmarframicroservices' # Replace with your Docker Hub username and repository
-  dockerfilePath: '$(Build.SourcesDirectory)/Servicios.api.Gateway/Dockerfile'
+  dockerfilePath: 'Servicios.api.Gateway/Dockerfile'
+  buildContext: 'Servicios.api.Gateway' # The build context is set to the 'Servicios.api.Gateway' directory
   tag: '$(Build.BuildId)'
 
   # Agent VM image name
@@ -29,6 +30,7 @@ stages:
         command: build
         repository: $(imageRepository)
         dockerfile: $(dockerfilePath)
+        context: $(Build.SourcesDirectory)/$(buildContext) # Added build context here
         tags: |
           $(tag)
 
