@@ -21,8 +21,8 @@ jobs:
     displayName: 'Build an image'
     inputs:
       command: build
-      dockerfile: 'Servicios.api.Gateway/Dockerfile'
-      context: '.' 
+      dockerfile: 'Dockerfile'
+      context: 'Servicios.api.Gateway' 
       arguments: '--no-cache'
       repository: $(imageRepository)
       tags: |
