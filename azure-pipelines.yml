@@ -21,8 +21,8 @@ jobs:
     displayName: 'Build an image'
     inputs:
       command: build
-      dockerfile: 'MicroservicesDevOps/Servicios.api.Gateway/Dockerfile'
-      context: 'MicroservicesDevOps/Servicios.api.Gateway'
+      dockerfile: 'Servicios.api.Gateway/Dockerfile' # Ruta relativa desde la raíz del repositorio
+      context: '.' # Contexto desde la raíz del repositorio
       arguments: '--no-cache'
       repository: $(imageRepository)
       tags: |
