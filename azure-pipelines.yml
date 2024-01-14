@@ -21,8 +21,10 @@ jobs:
     displayName: 'Build an image'
     inputs:
       command: build
-      dockerfile: 'Dockerfile'
-      context: 'Servicios.api.Gateway' 
+      # Especificamos la ruta correcta al Dockerfile
+      dockerfile: 'Servicios.api.Gateway/Dockerfile'
+      # El contexto es la raíz del repositorio
+      context: '.' 
       arguments: '--no-cache'
       repository: $(imageRepository)
       tags: |
