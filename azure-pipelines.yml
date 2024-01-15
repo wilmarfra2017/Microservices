@@ -20,7 +20,7 @@ jobs:
   - task: Bash@3
     inputs:
       targetType: 'inline'
-      script: 'ls pwd'
+      script: 'ls'
   - task: Docker@2
     displayName: 'Build an image'
     inputs:
