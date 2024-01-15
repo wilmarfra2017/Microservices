@@ -17,6 +17,10 @@ jobs:
 - job: Build
   displayName: 'Build and push image to Docker Hub'
   steps:
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: 'ls pwd'
   - task: Docker@2
     displayName: 'Build an image'
     inputs:
