@@ -5,7 +5,7 @@ resources:
 - repo: self
 
 variables:
-  system.debug: true
+  system.debug: false
   dockerHubServiceConnection: 'DockerHubConnection'
   imageRepository: 'mart800749/MicroservicesDevOps'
   tag: '$(Build.BuildId)'
@@ -22,7 +22,7 @@ jobs:
     inputs:
       command: build
       dockerfile: 'Servicios.api.Gateway/Dockerfile'
-      context: '.'
+      context: 'Servicios.api.Gateway'
       arguments: '--no-cache'
       repository: $(imageRepository)
       tags: |
