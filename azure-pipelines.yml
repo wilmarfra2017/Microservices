@@ -5,38 +5,168 @@ resources:
 - repo: self
 
 variables:
-  system.debug: false
-  dockerHubServiceConnection: 'DockerHubConnection'
-  imageRepository: 'mart800749/MicroservicesDevOps'
-  tag: '$(Build.BuildId)'
-
+- name: system.debug
+  value: false
+- name: dockerHubServiceConnection
+  value: 'DockerHubConnection'
+- name: imageRepository
+  value: 'mart800749/MicroservicesDevOps'
+- name: tag
+  value: '$(Build.BuildId)'
 pool:
   vmImage: 'ubuntu-latest'
-
-jobs:
-- job: Build
-  displayName: 'Build and push image to Docker Hub'
-  steps:
-  - task: Bash@3
-    inputs:
-      targetType: 'inline'
-      script: 'ls'
-  - task: Docker@2
-    displayName: 'Build an image'
-    inputs:
-      command: build
-      dockerfile: '$(Build.SourcesDirectory)/Servicios.api.Gateway/Dockerfile'
-      //context: 'Servicios.api.Gateway'
-      arguments: '--no-cache'
-      repository: $(imageRepository)
-      tags: |
-        $(tag)
-
-  - task: Docker@2
-    displayName: 'Push the image to Docker Hub'
-    inputs:
-      command: push
-      repository: $(imageRepository)
-      containerRegistry: $(dockerHubServiceConnection)
-      tags: |
-        $(tag)
+stages:
+- stage: __default
+  jobs:
+  - job: BuildGateway
+    displayName: 'Build and push Gateway image to Docker Hub'
+    steps:
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: 'ls'
+    - task: Docker@2
+      displayName: 'Build Gateway image'
+      inputs:
+        command: build
+        dockerfile: '$(Build.SourcesDirectory)/Servicios.api.Gateway/Dockerfile'
+        arguments: '--no-cache'
+        repository: $(imageRepository)
+        tags: |
+          gateway-$(tag)
+    - task: Docker@2
+      displayName: 'Push Gateway image to Docker Hub'
+      inputs:
+        command: push
+        repository: $(imageRepository)
+        containerRegistry: $(dockerHubServiceConnection)
+        tags: |
+          gateway-$(tag)
+  - job: BuildLibreria
+    displayName: 'Build and push Libreria image to Docker Hub'
+    steps:
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: 'ls'
+    - task: Docker@2
+      displayName: 'Build Libreria image'
+      inputs:
+        command: build
+        dockerfile: '$(Build.SourcesDirectory)/Servicios.api.Libreria/Dockerfile'
+        arguments: '--no-cache'
+        repository: $(imageRepository)
+        tags: |
+          libreria-$(tag)
+    - task: Docker@2
+      displayName: 'Push Libreria image to Docker Hub'
+      inputs:
+        command: push
+        repository: $(imageRepository)
+        containerRegistry: $(dockerHubServiceConnection)
+        tags: |
+          libreria-$(tag)
+  - job: BuildSeguridad
+    displayName: 'Build and push Seguridad image to Docker Hub'
+    steps:
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: 'ls'
+    - task: Docker@2
+      displayName: 'Build Seguridad image'
+      inputs:
+        command: build
+        dockerfile: '$(Build.SourcesDirectory)/Servicios.api.Seguridad/Dockerfile'
+        arguments: '--no-cache'
+        repository: $(imageRepository)
+        tags: |
+          seguridad-$(tag)
+    - task: Docker@2
+      displayName: 'Push Seguridad image to Docker Hub'
+      inputs:
+        command: push
+        repository: $(imageRepository)
+        containerRegistry: $(dockerHubServiceConnection)
+        tags: |
+          seguridad-$(tag)
+    - task: CopyFiles@2
+      displayName: 'Copy Files'
+      inputs:
+        Contents: |
+          gateway-deploy.yml
+          gateway-service.yml
+          microservice.libreria.deploy.yml
+          microservice.libreria.service.yml
+          microservice.seguridad.deploy.yml
+          microservice.seguridad.service.yml
+          mongo-deploy.yml
+          mongo-service.yml
+          sqlserver-deploy.yml
+          sqlserver-service.yml
+        TargetFolder: '$(System.DefaultWorkingDirectory)'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifacts'
+      inputs:
+        PathtoPublish: '$(System.DefaultWorkingDirectory)'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
+  - job: DeployToKubernetes
+    displayName: 'Deploy to Kubernetes'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: Bash@3
+      displayName: 'Log archivos directorio $(System.DefaultWorkingDirectory)'
+      inputs:
+        targetType: 'inline'
+        script: |
+          echo "Listando archivos en el directorio $(System.DefaultWorkingDirectory):"
+          ls -la $(System.DefaultWorkingDirectory) | awk '{print "Archivo: " $9}'
+          echo "El directorio de artefactos es: $(System.DefaultWorkingDirectory)"
+          ls -la $(System.DefaultWorkingDirectory)
+    - task: Kubernetes@1
+      displayName: 'Deploy gateway to Kubernetes'
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: 'AKS-Service-Connection'
+        azureResourceGroup: 'microservice-resourcegroup'
+        kubernetesCluster: 'microservices-cluster'
+        command: 'apply'
+        arguments: '-f $(System.DefaultWorkingDirectory)/gateway-deploy.yml --namespace production'
+    - task: Kubernetes@1
+      displayName: 'Deploy microservice.libreria to Kubernetes'
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: 'AKS-Service-Connection'
+        azureResourceGroup: 'microservice-resourcegroup'
+        kubernetesCluster: 'microservices-cluster'
+        command: 'apply'
+        arguments: '-f $(System.DefaultWorkingDirectory)/microservice.libreria.deploy.yml --namespace production'
+    - task: Kubernetes@1
+      displayName: 'Deploy microservice.seguridad to Kubernetes'
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: 'AKS-Service-Connection'
+        azureResourceGroup: 'microservice-resourcegroup'
+        kubernetesCluster: 'microservices-cluster'
+        command: 'apply'
+        arguments: '-f $(System.DefaultWorkingDirectory)/microservice-seguridad-deploy.yml --namespace production'
+    - task: Kubernetes@1
+      displayName: 'Deploy mongo to Kubernetes'
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: 'AKS-Service-Connection'
+        azureResourceGroup: 'microservice-resourcegroup'
+        kubernetesCluster: 'microservices-cluster'
+        command: 'apply'
+        arguments: '-f $(System.DefaultWorkingDirectory)/mongo-deploy.yml --namespace production'
+    - task: Kubernetes@1
+      displayName: 'Deploy sqlserver to Kubernetes'
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: 'AKS-Service-Connection'
+        azureResourceGroup: 'microservice-resourcegroup'
+        kubernetesCluster: 'microservices-cluster'
+        command: 'apply'
+        arguments: '-f $(System.DefaultWorkingDirectory)/sqlserver-deploy.yml --namespace production'
