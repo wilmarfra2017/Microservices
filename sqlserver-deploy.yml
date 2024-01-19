@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
     name: mssql-deploy
+    namespace: production
     labels:
         name: mssql-deploy
         app: microservice-seguridad

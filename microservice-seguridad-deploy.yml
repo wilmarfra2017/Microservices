@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: microservice-seguridad-deploy
+  namespace: production
   labels:
     name: microservice-seguridad-deploy
     app: microservice
