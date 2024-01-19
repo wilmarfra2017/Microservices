@@ -142,7 +142,7 @@
           "Port": "80"
         }
       ],
-      "UpstreamPathTemplate": "/climaactual_test",
+      "UpstreamPathTemplate": "/clima_actual",
       "UpstreamHttpMethod": [ "GET" ]
     }
 
