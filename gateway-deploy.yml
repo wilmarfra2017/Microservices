@@ -22,5 +22,6 @@ spec:
       containers:
       - name: gateway-app
         image: mart800749/serviciosapigateway:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
