@@ -111,6 +111,12 @@ stages:
         PathtoPublish: '$(System.DefaultWorkingDirectory)'
         ArtifactName: 'drop'
         publishLocation: 'Container'
+  - job: UpdateK8sDeploymentFiles
+    displayName: 'Update Kubernetes deployment files with new image tags'
+    steps:
+    - script: |
+        sed -i 's|image: mart800749/microservicesdevops:.*|image: mart800749/microservicesdevops:$(tag)|g' *.yml
+      displayName: 'Update Image Tags in K8s Files'
   - job: DeployToKubernetes
     displayName: 'Deploy to Kubernetes'
     pool:
