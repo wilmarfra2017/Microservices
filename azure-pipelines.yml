@@ -112,7 +112,7 @@ stages:
         azureResourceGroup: 'microservice-resourcegroup'
         kubernetesCluster: 'microservices-cluster'
         command: apply
-        arguments: '-f $(Build.ArtifactStagingDirectory)/temp/microservice-libreria-deploy.yml --namespace production'
+        arguments: '-f $(Build.ArtifactStagingDirectory)/temp/libreria-deploy.yml --namespace production'
 
     - task: Kubernetes@1
       displayName: 'Deploy Seguridad'
@@ -122,7 +122,7 @@ stages:
         azureResourceGroup: 'microservice-resourcegroup'
         kubernetesCluster: 'microservices-cluster'
         command: apply
-        arguments: '-f $(Build.ArtifactStagingDirectory)/temp/microservice-seguridad-deploy.yml --namespace production'
+        arguments: '-f $(Build.ArtifactStagingDirectory)/temp/seguridad-deploy.yml --namespace production'
 
     - task: Kubernetes@1
       displayName: 'Deploy MongoDB'
