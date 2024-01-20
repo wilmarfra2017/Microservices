@@ -103,27 +103,27 @@ stages:
         azureResourceGroup: 'microservice-resourcegroup'
         kubernetesCluster: 'microservices-cluster'
         command: apply
-        arguments: '-f $(Build.ArtifactStagingDirectory)/temp/k8s/gateway-deploy.yml --namespace production'
+        arguments: '-f $(Build.ArtifactStagingDirectory)/temp/gateway-deploy.yml --namespace production'
     - task: Kubernetes@1
       displayName: 'Deploy Libreria'
       inputs:
         command: apply
-        arguments: '-f $(Build.ArtifactStagingDirectory)/k8s/microservice-libreria-deploy.yml --namespace production'
+        arguments: '-f $(Build.ArtifactStagingDirectory)/temp/microservice-libreria-deploy.yml --namespace production'
 
     - task: Kubernetes@1
       displayName: 'Deploy Seguridad'
       inputs:
         command: apply
-        arguments: '-f $(Build.ArtifactStagingDirectory)/k8s/microservice-seguridad-deploy.yml --namespace production'
+        arguments: '-f $(Build.ArtifactStagingDirectory)/temp/microservice-seguridad-deploy.yml --namespace production'
 
     - task: Kubernetes@1
       displayName: 'Deploy MongoDB'
       inputs:
         command: apply
-        arguments: '-f $(Build.ArtifactStagingDirectory)/k8s/mongo-deploy.yml --namespace production'
+        arguments: '-f $(Build.ArtifactStagingDirectory)/temp/mongo-deploy.yml --namespace production'
 
     - task: Kubernetes@1
       displayName: 'Deploy SQL Server'
       inputs:
         command: apply
-        arguments: '-f $(Build.ArtifactStagingDirectory)/k8s/sqlserver-deploy.yml --namespace production'
+        arguments: '-f $(Build.ArtifactStagingDirectory)/temp/sqlserver-deploy.yml --namespace production'
