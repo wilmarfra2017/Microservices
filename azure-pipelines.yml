@@ -105,22 +105,22 @@ stages:
       displayName: 'Deploy Libreria'
       inputs:
         command: apply
-        arguments: '-f $(System.DefaultWorkingDirectory)/k8s/microservice-libreria-deploy.yml --namespace production'
+        arguments: '-f $(Build.ArtifactStagingDirectory)/k8s/microservice-libreria-deploy.yml --namespace production'
 
     - task: Kubernetes@1
       displayName: 'Deploy Seguridad'
       inputs:
         command: apply
-        arguments: '-f $(System.DefaultWorkingDirectory)/k8s/microservice-seguridad-deploy.yml --namespace production'
+        arguments: '-f $(Build.ArtifactStagingDirectory)/k8s/microservice-seguridad-deploy.yml --namespace production'
 
     - task: Kubernetes@1
       displayName: 'Deploy MongoDB'
       inputs:
         command: apply
-        arguments: '-f $(System.DefaultWorkingDirectory)/k8s/mongo-deploy.yml --namespace production'
+        arguments: '-f $(Build.ArtifactStagingDirectory)/k8s/mongo-deploy.yml --namespace production'
 
     - task: Kubernetes@1
       displayName: 'Deploy SQL Server'
       inputs:
         command: apply
-        arguments: '-f $(System.DefaultWorkingDirectory)/k8s/sqlserver-deploy.yml --namespace production'
+        arguments: '-f $(Build.ArtifactStagingDirectory)/k8s/sqlserver-deploy.yml --namespace production'
