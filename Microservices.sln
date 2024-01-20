@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Servicios.api.Gateway", "Se
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "kubernetes", "kubernetes", "{46979A57-AE19-42CD-B279-E629D7E995B9}"
 	ProjectSection(SolutionItems) = preProject
+		gateway-deploy.yml = gateway-deploy.yml
 		gateway-pod.yml = gateway-pod.yml
 		gateway-service.yml = gateway-service.yml
-		getway-deploy.yml = getway-deploy.yml
 		microservice-libreria-pod.yml = microservice-libreria-pod.yml
 		microservice-libreria-service.yml = microservice-libreria-service.yml
 		microservice-seguridad-deploy.yml = microservice-seguridad-deploy.yml
