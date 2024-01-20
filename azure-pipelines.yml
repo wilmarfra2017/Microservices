@@ -100,8 +100,7 @@ stages:
         azureResourceGroup: 'microservice-resourcegroup'
         kubernetesCluster: 'microservices-cluster'
         command: apply
-        arguments: '-f $(System.DefaultWorkingDirectory)/k8s/gateway-deploy.yml --namespace production'
-
+        arguments: '-f $(Build.ArtifactStagingDirectory)/temp/k8s/gateway-deploy.yml --namespace production'
     - task: Kubernetes@1
       displayName: 'Deploy Libreria'
       inputs:
