@@ -9,6 +9,6 @@ metadata:
 spec:
   containers:
   - name: gateway-app
-    image: mart800749/microservicesdevops:gateway-$(Build.BuildId)
+    image: $(gatewayImage)
     ports:
     - containerPort: 80

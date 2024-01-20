@@ -9,7 +9,7 @@ metadata:
 spec:
   containers:
   - name: microservice-libreria-app
-    image: mart800749/microservicesdevops:libreria-$(Build.BuildId)
+    image: $(libreriaImage)
     ports:
     - containerPort: 80
     env:
