@@ -5,14 +5,18 @@ resources:
 - repo: self
 
 variables:
-- name: system.debug
-  value: false
-- name: dockerHubServiceConnection
-  value: 'DockerHubConnection'
-- name: imageRepository
-  value: 'mart800749/microservicesdevops'
-- name: tag
-  value: '$(Build.BuildId)'
+  - name: system.debug
+    value: false
+  - name: dockerHubServiceConnection
+    value: 'DockerHubConnection'
+  - name: tag
+    value: '$(Build.BuildId)'
+  - name: gatewayImage
+    value: 'mart800749/gateway:$(tag)'
+  - name: libreriaImage
+    value: 'mart800749/libreria:$(tag)'
+  - name: seguridadImage
+    value: 'mart800749/seguridad:$(tag)'
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -23,33 +27,36 @@ stages:
   - job: BuildAndPush
     displayName: 'Build and Push Images to Docker Hub'
     steps:
-    - task: Docker@2
-      displayName: 'Build and Push Gateway Image'
-      inputs:
-        command: buildAndPush
-        dockerfile: '$(Build.SourcesDirectory)/Servicios.api.Gateway/Dockerfile'
-        repository: $(imageRepository)/gateway
-        tags: $(tag)
-        containerRegistry: $(dockerHubServiceConnection)
-        addPipelineData: false
-    - task: Docker@2
-      displayName: 'Build and Push Libreria Image'
-      inputs:
-        command: buildAndPush
-        dockerfile: '$(Build.SourcesDirectory)/Servicios.api.Libreria/Dockerfile'
-        repository: $(imageRepository)/libreria
-        tags: $(tag)
-        containerRegistry: $(dockerHubServiceConnection)
-        addPipelineData: false
-    - task: Docker@2
-      displayName: 'Build and Push Seguridad Image'
-      inputs:
-        command: buildAndPush
-        dockerfile: '$(Build.SourcesDirectory)/Servicios.api.Seguridad/Dockerfile'
-        repository: $(imageRepository)/seguridad
-        tags: $(tag)
-        containerRegistry: $(dockerHubServiceConnection)
-        addPipelineData: false
+      - task: Docker@2
+        displayName: 'Build and Push Gateway Image'
+        inputs:
+          command: buildAndPush
+          dockerfile: '$(Build.SourcesDirectory)/Servicios.api.Gateway/Dockerfile'
+          repository: 'mart800749/gateway'
+          tags: |
+            $(tag)
+          containerRegistry: $(dockerHubServiceConnection)
+          addPipelineData: false
+      - task: Docker@2
+        displayName: 'Build and Push Libreria Image'
+        inputs:
+          command: buildAndPush
+          dockerfile: '$(Build.SourcesDirectory)/Servicios.api.Libreria/Dockerfile'
+          repository: 'mart800749/libreria'
+          tags: |
+            $(tag)
+          containerRegistry: $(dockerHubServiceConnection)
+          addPipelineData: false
+      - task: Docker@2
+        displayName: 'Build and Push Seguridad Image'
+        inputs:
+          command: buildAndPush
+          dockerfile: '$(Build.SourcesDirectory)/Servicios.api.Seguridad/Dockerfile'
+          repository: 'mart800749/seguridad'
+          tags: |
+            $(tag)
+          containerRegistry: $(dockerHubServiceConnection)
+          addPipelineData: false
 
   - job: UpdateK8sDeploymentFiles
     displayName: 'Update Kubernetes deployment files with new image tags'
@@ -60,9 +67,9 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          sed -i "s|image: $(imageRepository)/gateway:.*|image: $(imageRepository)/gateway:$(tag)|g" $(Build.SourcesDirectory)/gateway-deploy.yml
-          sed -i "s|image: $(imageRepository)/libreria:.*|image: $(imageRepository)/libreria:$(tag)|g" $(Build.SourcesDirectory)/microservice-libreria-deploy.yml
-          sed -i "s|image: $(imageRepository)/seguridad:.*|image: $(imageRepository)/seguridad:$(tag)|g" $(Build.SourcesDirectory)/microservice-seguridad-deploy.yml
+          sed -i "s|image: .*\/gateway:.*|image: $(gatewayImage)|g" $(Build.SourcesDirectory)/gateway-deploy.yml
+          sed -i "s|image: .*\/libreria:.*|image: $(libreriaImage)|g" $(Build.SourcesDirectory)/microservice-libreria-deploy.yml
+          sed -i "s|image: .*\/seguridad:.*|image: $(seguridadImage)|g" $(Build.SourcesDirectory)/microservice-seguridad-deploy.yml
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Updated Kubernetes Deployment Files'
       inputs:
