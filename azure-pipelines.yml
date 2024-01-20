@@ -92,6 +92,9 @@ stages:
       inputs:
         artifactName: 'k8s'
         downloadPath: '$(Build.ArtifactStagingDirectory)/temp'
+    - script: |
+        ls -R $(Build.ArtifactStagingDirectory)/temp
+      displayName: 'List contents of temp directory'
     - task: Kubernetes@1
       displayName: 'Deploy Gateway'
       inputs:
