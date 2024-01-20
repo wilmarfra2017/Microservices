@@ -115,7 +115,12 @@ stages:
     displayName: 'Update Kubernetes deployment files with new image tags'
     steps:
     - script: |
-        sed -i 's|image: mart800749/microservicesdevops:.*|image: mart800749/microservicesdevops:$(tag)|g' *.yml
+        LIBRERIA_TAG="libreria-$(Build.BuildId)"
+        SEGURIDAD_TAG="seguridad-$(Build.BuildId)"
+        GATEWAY_TAG="gateway-$(Build.BuildId)"
+        sed -i "s|mart800749/microservicesdevops:libreria-.*|mart800749/microservicesdevops:$LIBRERIA_TAG|g" microservice-libreria-deploy.yml
+        sed -i "s|mart800749/microservicesdevops:seguridad-.*|mart800749/microservicesdevops:$SEGURIDAD_TAG|g" microservice-seguridad-deploy.yml
+        sed -i "s|mart800749/microservicesdevops:gateway-.*|mart800749/microservicesdevops:$GATEWAY_TAG|g" gateway-deploy.yml
       displayName: 'Update Image Tags in K8s Files'
   - job: DeployToKubernetes
     displayName: 'Deploy to Kubernetes'
