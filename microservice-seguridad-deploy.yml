@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: microservice-seguridad-app
-        image: mart800749/serviciosapiseguridad:latest
+        image: mart800749/microservicesdevops:seguridad-$(Build.BuildId)
         ports:
         - containerPort: 80
         env:
