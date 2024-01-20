@@ -95,6 +95,9 @@ stages:
     - script: |
         ls -R $(Build.ArtifactStagingDirectory)/temp
       displayName: 'List contents of temp directory'
+    - script: |
+        cat $(Build.ArtifactStagingDirectory)/temp/gateway-deploy.yml
+      displayName: 'Show gateway-deploy.yml contents'  
     - task: Kubernetes@1
       displayName: 'Deploy Gateway'
       inputs:
