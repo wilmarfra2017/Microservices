@@ -88,7 +88,7 @@ stages:
     - task: DownloadPipelineArtifact@2
       inputs:
         artifactName: 'k8s'
-        downloadPath: '$(System.ArtifactsDirectory)'
+        downloadPath: '$(System.DefaultWorkingDirectory)'
 
     - task: Kubernetes@1
       displayName: 'Deploy Gateway'
@@ -98,28 +98,28 @@ stages:
         azureResourceGroup: 'microservice-resourcegroup'
         kubernetesCluster: 'microservices-cluster'
         command: apply
-        arguments: '-f $(System.ArtifactsDirectory)/k8s/gateway-deploy.yml --namespace production'
+        arguments: '-f $(System.DefaultWorkingDirectory)/k8s/gateway-deploy.yml --namespace production'
 
     - task: Kubernetes@1
       displayName: 'Deploy Libreria'
       inputs:
         command: apply
-        arguments: '-f $(System.ArtifactsDirectory)/k8s/microservice-libreria-deploy.yml --namespace production'
+        arguments: '-f $(System.DefaultWorkingDirectory)/k8s/microservice-libreria-deploy.yml --namespace production'
 
     - task: Kubernetes@1
       displayName: 'Deploy Seguridad'
       inputs:
         command: apply
-        arguments: '-f $(System.ArtifactsDirectory)/k8s/microservice-seguridad-deploy.yml --namespace production'
+        arguments: '-f $(System.DefaultWorkingDirectory)/k8s/microservice-seguridad-deploy.yml --namespace production'
 
     - task: Kubernetes@1
       displayName: 'Deploy MongoDB'
       inputs:
         command: apply
-        arguments: '-f $(System.ArtifactsDirectory)/k8s/mongo-deploy.yml --namespace production'
+        arguments: '-f $(System.DefaultWorkingDirectory)/k8s/mongo-deploy.yml --namespace production'
 
     - task: Kubernetes@1
       displayName: 'Deploy SQL Server'
       inputs:
         command: apply
-        arguments: '-f $(System.ArtifactsDirectory)/k8s/sqlserver-deploy.yml --namespace production'
+        arguments: '-f $(System.DefaultWorkingDirectory)/k8s/sqlserver-deploy.yml --namespace production'
