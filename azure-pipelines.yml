@@ -85,6 +85,13 @@ stages:
       vmImage: 'ubuntu-latest'
     steps:
     - checkout: self
+    - script: |
+        mkdir $(Build.ArtifactStagingDirectory)/temp
+      displayName: 'Create Temp Directory'
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        artifactName: 'k8s'
+        downloadPath: '$(Build.ArtifactStagingDirectory)/temp'
     - task: DownloadPipelineArtifact@2
       inputs:
         artifactName: 'k8s'
