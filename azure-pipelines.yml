@@ -120,7 +120,16 @@ stages:
         azureResourceGroup: 'microservice-resourcegroup'
         kubernetesCluster: 'microservices-cluster'
         command: apply
-        arguments: '-f $(Build.ArtifactStagingDirectory)/temp/gateway-deploy.yml --namespace production'    
+        arguments: '-f $(Build.ArtifactStagingDirectory)/temp/gateway-deploy.yml --namespace production'
+    - task: Kubernetes@1
+      displayName: 'Deploy Gateway Service'
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: 'AKS-Service-Connection'
+        azureResourceGroup: 'microservice-resourcegroup'
+        kubernetesCluster: 'microservices-cluster'
+        command: apply
+        arguments: '-f $(Build.ArtifactStagingDirectory)/temp/gateway-service.yml --namespace production'
     - task: Kubernetes@1
       displayName: 'Deploy Libreria'
       inputs:        
@@ -130,7 +139,15 @@ stages:
         kubernetesCluster: 'microservices-cluster'
         command: apply
         arguments: '-f $(Build.ArtifactStagingDirectory)/temp/microservice.libreria.deploy.yml --namespace production'
-
+    - task: Kubernetes@1
+      displayName: 'Deploy Libreria Service'
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: 'AKS-Service-Connection'
+        azureResourceGroup: 'microservice-resourcegroup'
+        kubernetesCluster: 'microservices-cluster'
+        command: apply
+        arguments: '-f $(Build.ArtifactStagingDirectory)/temp/microservice-libreria-service.yml --namespace production'
     - task: Kubernetes@1
       displayName: 'Deploy Seguridad'
       inputs:
@@ -140,6 +157,15 @@ stages:
         kubernetesCluster: 'microservices-cluster'
         command: apply
         arguments: '-f $(Build.ArtifactStagingDirectory)/temp/microservice-seguridad-deploy.yml --namespace production'
+    - task: Kubernetes@1
+      displayName: 'Deploy Seguridad Service'
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: 'AKS-Service-Connection'
+        azureResourceGroup: 'microservice-resourcegroup'
+        kubernetesCluster: 'microservices-cluster'
+        command: apply
+        arguments: '-f $(Build.ArtifactStagingDirectory)/temp/microservice-seguridad-service.yml --namespace production'
 
     - task: Kubernetes@1
       displayName: 'Deploy MongoDB'
@@ -150,6 +176,15 @@ stages:
         kubernetesCluster: 'microservices-cluster'
         command: apply
         arguments: '-f $(Build.ArtifactStagingDirectory)/temp/mongo-deploy.yml --namespace production'
+    - task: Kubernetes@1
+      displayName: 'Deploy Mongo Service'
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: 'AKS-Service-Connection'
+        azureResourceGroup: 'microservice-resourcegroup'
+        kubernetesCluster: 'microservices-cluster'
+        command: apply
+        arguments: '-f $(Build.ArtifactStagingDirectory)/temp/mongo-service.yml --namespace production'
 
     - task: Kubernetes@1
       displayName: 'Deploy SQL Server'
@@ -160,3 +195,15 @@ stages:
         kubernetesCluster: 'microservices-cluster'
         command: apply
         arguments: '-f $(Build.ArtifactStagingDirectory)/temp/sqlserver-deploy.yml --namespace production'
+    - task: Kubernetes@1
+      displayName: 'Deploy SQL Server Service'
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: 'AKS-Service-Connection'
+        azureResourceGroup: 'microservice-resourcegroup'
+        kubernetesCluster: 'microservices-cluster'
+        command: apply
+        arguments: '-f $(Build.ArtifactStagingDirectory)/temp/sqlserver-service.yml --namespace production'
+    - script: |
+        kubectl get svc --namespace production
+      displayName: 'List Services Post-Deployment'
