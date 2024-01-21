@@ -71,17 +71,17 @@ stages:
           echo "gatewayImage: $(gatewayImage)"
           echo "libreriaImage: $(libreriaImage)"
           echo "seguridadImage: $(seguridadImage)"
-          chmod 666 $(Build.SourcesDirectory)/gateway-deploy.yml
-          chmod 666 $(Build.SourcesDirectory)/microservice.libreria.deploy.yml
-          chmod 666 $(Build.SourcesDirectory)/microservice-seguridad-deploy.yml
+          chmod 666 "${BUILD_SOURCESDIRECTORY}/gateway-deploy.yml"
+          chmod 666 "${BUILD_SOURCESDIRECTORY}/microservice.libreria.deploy.yml"
+          chmod 666 "${BUILD_SOURCESDIRECTORY}/microservice-seguridad-deploy.yml"
 
           echo "Replacing image tags in deployment files:"
-          awk -v gatewayImage="$gatewayImage" '{gsub(/\$\(gatewayImage\)/, gatewayImage)}1' "$Build_SourcesDirectory/gateway-deploy.yml" > temp && mv temp "$Build_SourcesDirectory/gateway-deploy.yml"
-          awk -v libreriaImage="$(libreriaImage)" '{gsub(/image: .*\/libreria:.*/, "image: "libreriaImage)}1' "$(Build.SourcesDirectory)/microservice.libreria.deploy.yml" > tmp && mv tmp "$(Build.SourcesDirectory)/microservice.libreria.deploy.yml"
-          awk -v seguridadImage="$(seguridadImage)" '{gsub(/image: .*\/seguridad:.*/, "image: "seguridadImage)}1' "$(Build.SourcesDirectory)/microservice-seguridad-deploy.yml" > tmp && mv tmp "$(Build.SourcesDirectory)/microservice-seguridad-deploy.yml"
+          awk -v gatewayImage="$(gatewayImage)" '{gsub(/\$\(gatewayImage\)/, gatewayImage)}1' "${BUILD_SOURCESDIRECTORY}/gateway-deploy.yml" > temp && mv temp "${BUILD_SOURCESDIRECTORY}/gateway-deploy.yml"
+          awk -v libreriaImage="$(libreriaImage)" '{gsub(/image: .*\/libreria:.*/, "image: "libreriaImage)}1' "${BUILD_SOURCESDIRECTORY}/microservice.libreria.deploy.yml" > tmp && mv tmp "${BUILD_SOURCESDIRECTORY}/microservice.libreria.deploy.yml"
+          awk -v seguridadImage="$(seguridadImage)" '{gsub(/image: .*\/seguridad:.*/, "image: "seguridadImage)}1' "${BUILD_SOURCESDIRECTORY}/microservice-seguridad-deploy.yml" > tmp && mv tmp "${BUILD_SOURCESDIRECTORY}/microservice-seguridad-deploy.yml"
           
           echo "Verifying changes in gateway-deploy.yml:"
-          cat "$(Build.SourcesDirectory)/gateway-deploy.yml"
+          cat "${BUILD_SOURCESDIRECTORY}/gateway-deploy.yml"
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Updated Kubernetes Deployment Files'
       inputs:
