@@ -120,7 +120,7 @@ stages:
         azureResourceGroup: 'microservice-resourcegroup'
         kubernetesCluster: 'microservices-cluster'
         command: apply
-        arguments: '-f $(Build.ArtifactStagingDirectory)/temp/gateway-deploy.yml --namespace production'
+        arguments: '-f $(Build.ArtifactStagingDirectory)/temp/gateway-deploy.yml --namespace production'    
     - task: Kubernetes@1
       displayName: 'Deploy Libreria'
       inputs:        
@@ -160,3 +160,28 @@ stages:
         kubernetesCluster: 'microservices-cluster'
         command: apply
         arguments: '-f $(Build.ArtifactStagingDirectory)/temp/sqlserver-deploy.yml --namespace production'
+  - job: GetExternalIP
+    displayName: 'Get External IP Address'
+    dependsOn: DeployToKubernetes
+    condition: succeeded()
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - checkout: none
+    - task: AzureCLI@2
+      displayName: 'Get External IP Address of Gateway Service'
+      inputs:
+        azureSubscription: 'AKS-Service-Connection'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          EXTERNAL_IP=""
+          while [ -z "$EXTERNAL_IP" ]; do
+            EXTERNAL_IP=$(kubectl get service gateway-service -n production --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}")
+            if [ -z "$EXTERNAL_IP" ]; then
+              echo "Waiting for External IP..."
+              sleep 10
+            else
+              echo "External IP for Gateway Service is $EXTERNAL_IP"
+            fi
+          done
