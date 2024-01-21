@@ -77,8 +77,8 @@ stages:
 
           echo "Replacing image tags in deployment files:"
           awk -v gatewayImage="$(gatewayImage)" '{gsub(/\$\(gatewayImage\)/, gatewayImage)}1' "${BUILD_SOURCESDIRECTORY}/gateway-deploy.yml" > temp && mv temp "${BUILD_SOURCESDIRECTORY}/gateway-deploy.yml"
-          awk -v libreriaImage="$libreriaImage" '{gsub(/\$\(libreriaImage\)/, libreriaImage)}1' "${BUILD_SOURCESDIRECTORY}/microservice.libreria.deploy.yml" > temp && mv temp "${BUILD_SOURCESDIRECTORY}/microservice.libreria.deploy.yml"
-          awk -v seguridadImage="$seguridadImage" '{gsub(/\$\(seguridadImage\)/, seguridadImage)}1' "${BUILD_SOURCESDIRECTORY}/microservice-seguridad-deploy.yml" > temp && mv temp "${BUILD_SOURCESDIRECTORY}/microservice-seguridad-deploy.yml"
+          awk -v libreriaImage="$(libreriaImage)" '{gsub(/\$\(libreriaImage\)/, libreriaImage)}1' "${BUILD_SOURCESDIRECTORY}/microservice.libreria.deploy.yml" > temp && mv temp "${BUILD_SOURCESDIRECTORY}/microservice.libreria.deploy.yml"
+          awk -v seguridadImage="$(seguridadImage)" '{gsub(/\$\(seguridadImage\)/, seguridadImage)}1' "${BUILD_SOURCESDIRECTORY}/microservice-seguridad-deploy.yml" > temp && mv temp "${BUILD_SOURCESDIRECTORY}/microservice-seguridad-deploy.yml"
 
           echo "Verifying changes in gateway-deploy.yml:"
           cat "${BUILD_SOURCESDIRECTORY}/gateway-deploy.yml"
