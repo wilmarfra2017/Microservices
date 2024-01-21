@@ -70,9 +70,10 @@ stages:
           echo "gatewayImage: $(gatewayImage)"
           echo "libreriaImage: $(libreriaImage)"
           echo "seguridadImage: $(seguridadImage)"
-          sed -i "s|image: .*\/gateway:.*|image: $(gatewayImage)|g" $(Build.SourcesDirectory)/gateway-deploy.yml
-          sed -i "s|image: .*\/libreria:.*|image: $(libreriaImage)|g" $(Build.SourcesDirectory)/microservice.libreria.deploy.yml
-          sed -i "s|image: .*\/seguridad:.*|image: $(seguridadImage)|g" $(Build.SourcesDirectory)/microservice-seguridad-deploy.yml
+          echo "Update Kubernetes deployment files with new image tags"
+          sed -i "s|image: .*\/gateway:.*|image: $(gatewayImage)|g" "$(Build.SourcesDirectory)/gateway-deploy.yml"
+          sed -i "s|image: .*\/libreria:.*|image: $(libreriaImage)|g" "$(Build.SourcesDirectory)/microservice.libreria.deploy.yml"
+          sed -i "s|image: .*\/seguridad:.*|image: $(seguridadImage)|g" "$(Build.SourcesDirectory)/microservice-seguridad-deploy.yml"
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Updated Kubernetes Deployment Files'
       inputs:
