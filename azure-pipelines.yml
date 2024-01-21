@@ -82,6 +82,8 @@ stages:
 
           echo "Verifying changes in gateway-deploy.yml:"
           cat "${BUILD_SOURCESDIRECTORY}/gateway-deploy.yml"
+          echo "Verifying changes in microservice.libreria.deploy.yml:"
+          cat "${BUILD_SOURCESDIRECTORY}/microservice.libreria.deploy.yml"
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Updated Kubernetes Deployment Files'
       inputs:
