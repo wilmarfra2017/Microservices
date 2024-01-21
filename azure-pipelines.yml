@@ -204,6 +204,3 @@ stages:
         kubernetesCluster: 'microservices-cluster'
         command: apply
         arguments: '-f $(Build.ArtifactStagingDirectory)/temp/sqlserver-service.yml --namespace production'
-    - script: |
-        kubectl get svc --namespace production
-      displayName: 'List Services Post-Deployment'
