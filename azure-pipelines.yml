@@ -73,9 +73,9 @@ stages:
           echo "seguridadImage: $(seguridadImage)"
 
           echo "Replacing image tags in deployment files:"
-          sed -i "s|image: .*\/gateway:.*|image: $(gatewayImage)|g" $(Build.SourcesDirectory)/gateway-deploy.yml
-          sed -i "s|image: .*\/libreria:.*|image: $(libreriaImage)|g" $(Build.SourcesDirectory)/microservice-libreria-deploy.yml
-          sed -i "s|image: .*\/seguridad:.*|image: $(seguridadImage)|g" $(Build.SourcesDirectory)/microservice-seguridad-deploy.yml
+          sed -i "s|image: .*\/gateway:.*|image: $(gatewayImage)|g" "$(Build.SourcesDirectory)/gateway-deploy.yml"
+          sed -i "s|image: .*\/libreria:.*|image: $(libreriaImage)|g" "$(Build.SourcesDirectory)/microservice.libreria.deploy.yml"
+          sed -i "s|image: .*\/seguridad:.*|image: $(seguridadImage)|g" "$(Build.SourcesDirectory)/microservice-seguridad-deploy.yml"
           echo "Verifying changes in gateway-deploy.yml:"
           cat "${Build.SourcesDirectory}/gateway-deploy.yml"
     - task: PublishBuildArtifacts@1
